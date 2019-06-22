@@ -6,10 +6,9 @@ import kotlin.test.assertTrue
 
 internal class IntegrationTest {
 
-
     @Test
     fun integrateImperative() {
-        val integrationF = integrateImperative
+        val integrationF : IntegrationType = ::integrateImperative
         val const1 : (Double) -> Double = { x -> 1.0}
         assertNearlyEquals(1.0, integrationF(0.0,1.0, 1000000, const1))
         assertNearlyEquals(1.0, integrationF(0.0,1.0, 100000000, const1))
