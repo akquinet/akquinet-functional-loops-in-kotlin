@@ -1,8 +1,8 @@
 package de.akquinet.fp.functionalloops
 
-typealias IntegrationType = (Double, Double, Int, (Double) -> Double) -> Double
+typealias IntegrationType = (Double, Double, Long, (Double) -> Double) -> Double
 
-fun integrateImperative(start :Double, end : Double, precision: Int, f : (Double) -> Double) : Double {
+fun integrateImperative(start :Double, end : Double, precision: Long, f : (Double) -> Double) : Double {
     val step = (end-start) / precision
     var result = 0.0
     var x = start
@@ -13,7 +13,18 @@ fun integrateImperative(start :Double, end : Double, precision: Int, f : (Double
     return result
 }
 
-fun integrateFunctional(start :Double, end : Double, precision: Int, f : (Double) -> Double) : Double {
+fun integrateFunctional(start :Double, end : Double, precision: Long, f : (Double) -> Double) : Double {
+    val step = (end-start) / precision
+    return ( 0 .. precision)
+            .map { index -> start + index * step}
+            .map { x -> f(x) * step }
+            .sum()
+}
 
-    return 0.0
+fun integrateFunctionalSequence(start :Double, end : Double, precision: Long, f : (Double) -> Double) : Double {
+    val step = (end-start) / precision
+    return ( 0 .. precision).asSequence()
+            .map { index -> start + index * step}
+            .map { x -> f(x) * step }
+            .sum()
 }

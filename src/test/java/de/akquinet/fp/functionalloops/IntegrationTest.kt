@@ -16,11 +16,16 @@ internal class IntegrationTest {
         testIntegrationFunction(::integrateFunctional)
     }
 
+    @Test
+    fun integrateFunctionalSequence() {
+        testIntegrationFunction(::integrateFunctionalSequence)
+    }
+
     private fun testIntegrationFunction(integrationF: IntegrationType) {
         val const1: (Double) -> Double = { x -> 1.0 }
+        assertNearlyEquals(1.0, integrationF(0.0, 1.0, 10000, const1))
         assertNearlyEquals(1.0, integrationF(0.0, 1.0, 1000000, const1))
-        assertNearlyEquals(1.0, integrationF(0.0, 1.0, 100000000, const1))
-        assertNearlyEquals(2.0, integrationF(-1.0, 1.0, 1000000, const1))
+        assertNearlyEquals(2.0, integrationF(-1.0, 1.0, 10000, const1))
     }
 
     fun assertNearlyEquals( expected : Double, actual : Double) {
