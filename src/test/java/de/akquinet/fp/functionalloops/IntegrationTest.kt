@@ -1,16 +1,25 @@
 package de.akquinet.fp.functionalloops
 
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
+import kotlin.math.absoluteValue
+import kotlin.test.assertTrue
 
 internal class IntegrationTest {
+
 
     @Test
     fun integrateImperative() {
         val integrationF = integrateImperative
         val const1 : (Double) -> Double = { x -> 1.0}
-        assertEquals(1.0, integrationF(0.0,1.0, 1000, const1))
-        assertEquals(1.0, integrationF(0.0,1.0, 10000, const1))
-        assertEquals(1.0, integrationF(-1.0,1.0, 100, const1))
+        assertNearlyEquals(1.0, integrationF(0.0,1.0, 1000000, const1))
+        assertNearlyEquals(1.0, integrationF(0.0,1.0, 100000000, const1))
+        assertNearlyEquals(2.0, integrationF(-1.0,1.0, 1000000, const1))
+    }
+
+    fun assertNearlyEquals( expected : Double, actual : Double) {
+        val allowedError = 0.001
+        val delta = (expected - actual).absoluteValue
+        val message = "expected $expected differs from actual $actual, delta is $delta"
+        assertTrue(delta < allowedError, message)
     }
 }
