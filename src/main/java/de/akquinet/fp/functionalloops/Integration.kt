@@ -13,4 +13,7 @@ fun integrateImperative(start :Double, end : Double, precision: Int, f : (Double
     return result
 }
 
+fun integrateFunctional(start :Double, end : Double, precision: Int, f : (Double) -> Double) : Double {
 
+    return 0.0
+}
