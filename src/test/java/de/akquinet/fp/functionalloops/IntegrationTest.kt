@@ -21,11 +21,20 @@ internal class IntegrationTest {
         testIntegrationFunction(::integrateFunctionalSequence)
     }
 
+    @Test
+    fun integrateFunctionalSequence2() {
+        testIntegrationFunction(::integrateFunctionalSequence2)
+    }
+
+    private val iterations = 100
+
     private fun testIntegrationFunction(integrationF: IntegrationType) {
-        val const1: (Double) -> Double = { x -> 1.0 }
-        assertNearlyEquals(1.0, integrationF(0.0, 1.0, 10000, const1))
-        assertNearlyEquals(1.0, integrationF(0.0, 1.0, 1000000, const1))
-        assertNearlyEquals(2.0, integrationF(-1.0, 1.0, 10000, const1))
+        println("$Int.MAX_VALUE $iterations ${Int.MAX_VALUE-iterations} " + Int.MAX_VALUE)
+
+        val const1: (Double) -> Double = { _ -> 1.0 }
+        //assertNearlyEquals(1.0, integrationF(0.0, 1.0, iterations, const1))
+        //assertNearlyEquals(1.0, integrationF(0.0, 1.0, iterations *1, const1))
+        assertNearlyEquals(2.0, integrationF(-1.0, 1.0, iterations, const1))
     }
 
     fun assertNearlyEquals( expected : Double, actual : Double) {
