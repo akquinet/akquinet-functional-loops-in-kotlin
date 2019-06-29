@@ -9,6 +9,7 @@ x-last-ide-version: HfM1.6.1
 
 executable deakquinetfp
     main-is: Main.hs
+    ghc-options: -O
     build-depends:
         base -any,
         criterion -any
