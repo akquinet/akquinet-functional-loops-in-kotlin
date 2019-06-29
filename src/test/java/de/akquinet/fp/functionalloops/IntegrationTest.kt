@@ -17,6 +17,11 @@ internal class IntegrationTest {
     }
 
     @Test
+    fun integrateFunctionalCleanCode() {
+        testIntegrationFunction(::integrateFunctionalCleanCode)
+    }
+
+    @Test
     fun integrateFunctionalSequence() {
         testIntegrationFunction(::integrateFunctionalSequence)
     }
@@ -26,7 +31,7 @@ internal class IntegrationTest {
         testIntegrationFunction(::integrateFunctionalSequence2)
     }
 
-    private val iterations = 10000000
+    private val iterations = 1000
 
     private fun testIntegrationFunction(integrationF: IntegrationType) {
         val const1: (Double) -> Double = { _ -> 1.0 }

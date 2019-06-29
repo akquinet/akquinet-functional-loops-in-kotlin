@@ -22,6 +22,16 @@ fun integrateFunctional(start :Double, end : Double, precision: Int, f : (Double
             .sum()
 }
 
+fun integrateFunctionalCleanCode(start :Double, end : Double, precision: Int, f : (Double) -> Double) : Double {
+    val step = (end-start) / precision
+    val xCoordinates = (0 until precision)
+            .map { index -> start + index * step }
+    val allRectangles = xCoordinates
+            .map { x -> f(x) * step }
+    return allRectangles
+            .sum()
+}
+
 fun integrateFunctionalSequence(start :Double, end : Double, precision: Int, f : (Double) -> Double) : Double {
     val step = (end-start) / precision
     return ( 0 until precision).asSequence()
