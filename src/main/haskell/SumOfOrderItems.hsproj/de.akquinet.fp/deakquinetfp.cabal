@@ -9,12 +9,13 @@ x-last-ide-version: HfM1.6.1
 
 executable deakquinetfp
     main-is: Main.hs
-    ghc-options: -O
     build-depends:
         base -any,
-        criterion -any
+        criterion -any,
+        HUnit -any
     default-language: Haskell2010
     other-modules:
         SumOfOrderItems
         Integration
+    ghc-options: -O
 

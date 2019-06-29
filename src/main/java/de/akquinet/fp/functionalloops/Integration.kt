@@ -36,9 +36,11 @@ fun integrateFunctionalCleanCode(start: Double, end: Double, precision: Int, f: 
 
 fun integrateFunctionalSequence(start: Double, end: Double, precision: Int, f: (Double) -> Double): Double {
     val step = (end - start) / precision
-    return (0 until precision).asSequence()
+    val xCoordinates = (0 until precision).asSequence()
             .map { index -> start + index * step }
+    val allRectangles = xCoordinates
             .map { x -> f(x) * step }
+    return allRectangles
             .sum()
 }
 
@@ -67,13 +69,16 @@ fun main() {
         val averageExecutionTimeNs = (0..numberOfRepetitions)
                 .map {
                     try { measureTimeMillis { f(-1.0, 1.0, precision, ::testFunction) } }
-                    catch(e: Throwable) {Long.MIN_VALUE}
+                    catch(e: Throwable) {
+                        println("An Exception occured = ${e}")
+                        Long.MIN_VALUE
+                    }
                 }
                 .average()
         println("precision $precision: average $averageExecutionTimeNs")
     }
 
-    val precisions = (4..8).map(::pow10)
+    val precisions = (4..7).map(::pow10)
     val functions = listOf(
             ::integrateImperative
             , ::integrateFunctional

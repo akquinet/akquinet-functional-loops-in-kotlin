@@ -1,9 +1,11 @@
 -- Haskell Playground 1.0
 
 integrate (-1.0) 1.0 1000 testfunction
+
+integrate2 (-1.0) 1.0 1000 testfunction
  
 [1 ..4 ]
 
 10 ^ 2
 
-main
+
