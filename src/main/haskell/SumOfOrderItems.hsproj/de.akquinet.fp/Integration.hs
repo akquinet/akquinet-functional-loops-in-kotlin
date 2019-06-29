@@ -2,10 +2,11 @@ module Integration(doBenchmark) where
 
 import Criterion.Main
 
+integrate :: Double -> Double -> Int -> (Double -> Double) -> Double
 integrate start end precision function = sum allRectangles 
   where
-    step = (end - start) / precision
-    xCoordinates = map (\i -> start + i * step)
+    step = (end - start) / (fromIntegral precision)
+    xCoordinates = map (\i -> start + (fromIntegral i) * step)
                      [ 0 .. (precision-1)]
     allRectangles = map (\x -> x * step) xCoordinates
  
