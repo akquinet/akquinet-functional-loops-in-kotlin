@@ -14,3 +14,5 @@ fun sumFunctional(items: List<OrderItem>): Int =
         items
                 .map(OrderItem::amount)
                 .sum()
+
+fun sumByFunctional(items: List<OrderItem>): Int = items.sumBy(OrderItem::amount)

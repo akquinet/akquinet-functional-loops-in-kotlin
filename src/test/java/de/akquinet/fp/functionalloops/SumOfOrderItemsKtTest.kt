@@ -20,4 +20,9 @@ internal class SumOfOrderItemsKtTest {
     fun sumFunctional() {
         assertEquals(sumOfOrderedItems, sumFunctional(testItems))
     }
+
+    @Test
+    fun sumByFunctional() {
+        assertEquals(sumOfOrderedItems, sumByFunctional(testItems))
+    }
 }
