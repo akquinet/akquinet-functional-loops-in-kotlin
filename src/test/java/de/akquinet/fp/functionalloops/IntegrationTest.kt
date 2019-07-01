@@ -31,6 +31,17 @@ internal class IntegrationTest {
         testIntegrationFunction(::integrateFunctionalSequence2)
     }
 
+
+    @Test
+    fun integrateFunctionalSumby() {
+        testIntegrationFunction(::integrateFunctionalSumBy)
+    }
+
+    @Test
+    fun integrateFunctionalFold() {
+        testIntegrationFunction(::integrateFunctionalFold)
+    }
+
     private val iterations = 1000
 
     private fun testIntegrationFunction(integrationF: IntegrationType) {

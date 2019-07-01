@@ -34,6 +34,23 @@ fun integrateFunctionalCleanCode(start: Double, end: Double, precision: Int, f: 
             .sum()
 }
 
+fun integrateFunctionalSumBy(start: Double, end: Double, precision: Int, f: (Double) -> Double): Double {
+    val step = (end - start) / precision
+    return (0 until precision).sumByDouble { index ->
+        val x = start + index * step
+        f(x) * step
+    }
+}
+
+fun integrateFunctionalFold(start: Double, end: Double, precision: Int, f: (Double) -> Double): Double {
+    val step = (end - start) / precision
+    return (0 until precision).fold(0.0) { sum, index ->
+        val x = start + index * step
+        val block = f(x) * step
+        sum + block
+    }
+}
+
 fun integrateFunctionalSequence(start: Double, end: Double, precision: Int, f: (Double) -> Double): Double {
     val step = (end - start) / precision
     val xCoordinates = (0 until precision).asSequence()
@@ -84,7 +101,9 @@ fun main() {
             , ::integrateFunctional
             , ::integrateFunctionalCleanCode
             , ::integrateFunctionalSequence
-            , ::integrateFunctionalSequence2)
+            , ::integrateFunctionalSequence2
+            , ::integrateFunctionalSumBy
+            , ::integrateFunctionalFold)
 
     functions.forEach { f ->
         println("benchmarking function $f")
