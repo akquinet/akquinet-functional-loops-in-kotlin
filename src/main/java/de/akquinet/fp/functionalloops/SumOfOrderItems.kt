@@ -28,4 +28,9 @@ fun filterOrderItemsWithMinimumAmountImperativ(items: List<OrderItem>, amount:In
     return result
 }
 
+fun filterOrderItemsWithMinimumAmountFunctional(items: List<OrderItem>, amount:Int)
+        :List<OrderItem> =
+        items.filter {item -> item.amount >= amount}
+
+
 fun sumByFunctional(items: List<OrderItem>): Int = items.sumBy(OrderItem::amount)

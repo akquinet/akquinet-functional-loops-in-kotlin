@@ -28,7 +28,16 @@ internal class SumOfOrderItemsKtTest {
 
     @Test
     fun filterOrderItemsWithMinimumAmountImperativ() {
-        assertEquals(listOf(testItems[1]), filterOrderItemsWithMinimumAmountImperativ(testItems, 12))
-        assertEquals(testItems, filterOrderItemsWithMinimumAmountImperativ(testItems, 5))
+        testFilterOrderItemsWithMinimumAmount(::filterOrderItemsWithMinimumAmountImperativ)
+    }
+
+    @Test
+    fun filterOrderItemsWithMinimumAmountFunctional() {
+        testFilterOrderItemsWithMinimumAmount(::filterOrderItemsWithMinimumAmountFunctional)
+    }
+
+    private fun testFilterOrderItemsWithMinimumAmount(testFunction: (List<OrderItem>, Int) -> List<OrderItem>) {
+        assertEquals(listOf(testItems[1]), testFunction(testItems, 12))
+        assertEquals(testItems, testFunction(testItems, 5))
     }
 }

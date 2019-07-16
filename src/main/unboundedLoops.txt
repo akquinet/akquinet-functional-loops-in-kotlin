@@ -14,7 +14,39 @@ While the condition holds, the LOOP-body is executed. Hopefully, this execution 
 
 <H1> A Classical Example
 
-A typical text book example is to search a container of values for values with some properties.
+A typical text book example is to search a container of values for values with some properties. As example, let us reuse the OrderItem class from the last block:
 
+data class OrderItem(val orderNumber: String, val amount: Int)
+
+The task now should be to extract all order items with a minimum amount. Using an iterator, this would be a typical solution:
+
+fun filterOrderItemsWithMinimumAmountImperativ(items: List<OrderItem>, amount:Int)
+        :List<OrderItem> {
+    val result = mutableListOf<OrderItem>()
+    val iterator = items.listIterator()
+    while(iterator.hasNext()) {
+        val orderItem = iterator.next()
+        if (orderItem.amount >= amount) {
+            result.add(orderItem)
+        }
+    }
+    return result
+}
+
+There are several issues with this code. Coming from the topic of this article the first issue is that it uses a WHILE-loop for a bounded problem. The list items has a finite set of elements, thus the maximum number of loop iterations is bounded. From a pragmatic point of view this means, that if you have some error in you loop body it may happen that your code is caught in an infinite loop resulting in an hanging applications that heats up the CPU. With all this mutable data in the loop body the chance for erors increase.
+
+So, of course you should not implement the method like this. In fact the IMHO natural way of solving this task in Kotlin is the functional aproach:
+
+fun filterOrderItemsWithMinimumAmountFunctional(items: List<OrderItem>, amount:Int)
+        :List<OrderItem> =
+        items.filter {item -> item.amount >= amount}
+
+In typical enterprisy applications you rarely have unbounded problems. Thus, my advice is if you feel the urge to use a WHILE loop, double check if it is really necessary.
+
+<H1> I Lost it!
+
+So let us have a look at a more mathematical problem coming from a real life problem, I have actually encountered. For some reason, maybe your age, you forget an important password. You have some rules how you generate your passwords and you try out a lot of variants, but none works. So, you decide to let the computer do the work and creates passwords and tests them.
+
+To avoid publishing my rules and to simplify the code, let us say that a password is a sequence of non-capital letters (a-z) and digits (0-9).
 
 
