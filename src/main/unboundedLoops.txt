@@ -1,0 +1,20 @@
+<TITLE> Unbounded Functional Loops with Kotlin
+
+In my last post I introduced my point of view on how to implement bounded functional loops with Kotlin. Applications made of bounded loops have some nice properties. They always terminate in a computable maximum amount of time. But, as at least every computer scientist should know, there are some problems out there, which need algorithms that do not always terminate. For more details ahve a look at the well known Halteproblem (!). In this article I want to look how to develop these kinds of algorithms in Kotlin in a pure functional style. And, of course, I do some measurements, to compare the efficiency of functional programming with Kotlin with the classical imperative style.
+
+<MORE>
+
+The formal application class of bounded loops are FOR-programs (!) or primitive recursive functions (!). For unbounded loops the corresponding application class are WHILE-programs or nu-recursive functions (!). The idea is to use a loop such as this:
+
+WHILE (condition) {
+  LOOP-Body
+}
+
+While the condition holds, the LOOP-body is executed. Hopefully, this execution changes the application state so that at some point of time, the condition does not hold anymore, and the loop terminates.
+
+<H1> A Classical Example
+
+A typical text book example is to search a container of values for values with some properties.
+
+
+

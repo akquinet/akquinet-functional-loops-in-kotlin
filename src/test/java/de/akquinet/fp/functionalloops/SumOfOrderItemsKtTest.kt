@@ -25,4 +25,10 @@ internal class SumOfOrderItemsKtTest {
     fun sumByFunctional() {
         assertEquals(sumOfOrderedItems, sumByFunctional(testItems))
     }
+
+    @Test
+    fun filterOrderItemsWithMinimumAmountImperativ() {
+        assertEquals(listOf(testItems[1]), filterOrderItemsWithMinimumAmountImperativ(testItems, 12))
+        assertEquals(testItems, filterOrderItemsWithMinimumAmountImperativ(testItems, 5))
+    }
 }

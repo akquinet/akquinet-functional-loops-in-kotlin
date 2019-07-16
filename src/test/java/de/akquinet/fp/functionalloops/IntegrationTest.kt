@@ -31,7 +31,6 @@ internal class IntegrationTest {
         testIntegrationFunction(::integrateFunctionalSequence2)
     }
 
-
     @Test
     fun integrateFunctionalSumby() {
         testIntegrationFunction(::integrateFunctionalSumBy)
@@ -42,16 +41,26 @@ internal class IntegrationTest {
         testIntegrationFunction(::integrateFunctionalFold)
     }
 
-    private val iterations = 1000
+    @Test
+    fun integrateFunctionalStreams() {
+        testIntegrationFunction(::integrateFunctionalStreams)
+    }
+
+    @Test
+    fun integrateFunctionalJavaStreams() {
+        testIntegrationFunction(::integrateFunctionalJavaStreams)
+    }
+
+    private val iterations = 100
 
     private fun testIntegrationFunction(integrationF: IntegrationType) {
         val const1: (Double) -> Double = { _ -> 1.0 }
-        //assertNearlyEquals(1.0, integrationF(0.0, 1.0, iterations, const1))
-        //assertNearlyEquals(1.0, integrationF(0.0, 1.0, iterations *1, const1))
+        assertNearlyEquals(1.0, integrationF(0.0, 1.0, iterations, const1))
+        assertNearlyEquals(1.0, integrationF(0.0, 1.0, iterations * 10, const1))
         assertNearlyEquals(2.0, integrationF(-1.0, 1.0, iterations, const1))
     }
 
-    fun assertNearlyEquals( expected : Double, actual : Double) {
+    fun assertNearlyEquals(expected: Double, actual: Double) {
         val allowedError = 0.00000001
         val delta = (expected - actual).absoluteValue
         val message = "expected $expected differs from actual $actual, delta is $delta"

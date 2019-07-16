@@ -1,5 +1,6 @@
 package de.akquinet.fp.functionalloops
 
+import java.util.stream.DoubleStream
 import kotlin.system.measureTimeMillis
 
 typealias IntegrationType = (Double, Double, Int, (Double) -> Double) -> Double
@@ -73,6 +74,20 @@ fun integrateFunctionalSequence2(start: Double, end: Double, precision: Int, f: 
             .sum()
 }
 
+fun integrateFunctionalStreams(start: Double, end: Double, precision: Int, f: (Double) -> Double): Double {
+    val step = (end - start) / precision
+    return DoubleStream
+            .iterate(start,
+                    { x -> x < end }
+                    , { x -> x + step })
+            .map { x -> f(x) * step }
+            .sum()
+}
+
+fun integrateFunctionalJavaStreams(start: Double, end: Double, precision: Int, f: (Double) -> Double): Double {
+    return IntegrationJavaStreams.integrate(start, end, precision, f)
+}
+
 fun main() {
     println("Starting benchmark")
 
@@ -81,12 +96,13 @@ fun main() {
 
     fun benchmark(precision: Int, f: IntegrationType) {
         val numberOfRepetitions = 5
-        fun testFunction(x: Double): Double = 1.0
+        fun testFunction(@Suppress("UNUSED_PARAMETER") x: Double): Double = 1.0
         System.gc()
         val averageExecutionTimeNs = (0..numberOfRepetitions)
                 .map {
-                    try { measureTimeMillis { f(-1.0, 1.0, precision, ::testFunction) } }
-                    catch(e: Throwable) {
+                    try {
+                        measureTimeMillis { f(-1.0, 1.0, precision, ::testFunction) }
+                    } catch (e: Throwable) {
                         println("An Exception occured = ${e}")
                         Long.MIN_VALUE
                     }
@@ -95,15 +111,18 @@ fun main() {
         println("precision $precision: average $averageExecutionTimeNs")
     }
 
-    val precisions = (4..7).map(::pow10)
+    val precisions = (4..8).map(::pow10)
     val functions = listOf(
             ::integrateImperative
-            , ::integrateFunctional
-            , ::integrateFunctionalCleanCode
+//            , ::integrateFunctional
+//            , ::integrateFunctionalCleanCode
             , ::integrateFunctionalSequence
-            , ::integrateFunctionalSequence2
+//            , ::integrateFunctionalSequence2
             , ::integrateFunctionalSumBy
-            , ::integrateFunctionalFold)
+            , ::integrateFunctionalFold
+            , ::integrateFunctionalStreams
+            , ::integrateFunctionalJavaStreams
+    )
 
     functions.forEach { f ->
         println("benchmarking function $f")
