@@ -6,9 +6,9 @@ fun dictionaryAttackImperative(dictionary: Iterator<String>, checkPassword: (Str
 }
 
 fun createLettersAndNumbersDictionary(): Iterator<String> =
-        LettersAndNumbersDictionary()
+        LettersAndNumbersDictionaryImperative()
 
-class LettersAndNumbersDictionary : Iterator<String> {
+class LettersAndNumbersDictionaryImperative : Iterator<String> {
     private var nextEntry: String = "a"
 
     override fun hasNext(): Boolean = true
@@ -16,9 +16,8 @@ class LettersAndNumbersDictionary : Iterator<String> {
     override fun next(): String {
         val result = nextEntry
 
-        //var overrun = false
-        var index = 0
         var nextEntryArray = nextEntry.toCharArray()
+        var index = 0
         do {
             val ele = nextEntryArray[index]
             val (nextEle, overrun) = when {
@@ -31,7 +30,7 @@ class LettersAndNumbersDictionary : Iterator<String> {
 
             if (overrun && (index == nextEntry.length)) {
                 val nextEle = if (index % 2 == 1) '0' else 'a'
-                val nextEleArray = CharArray(1, {_ -> nextEle})
+                val nextEleArray = CharArray(1, { _ -> nextEle })
                 nextEntryArray = nextEleArray + nextEntryArray
             }
         } while (overrun && (index < nextEntry.length))
@@ -44,12 +43,12 @@ class LettersAndNumbersDictionary : Iterator<String> {
             if (ele == '9')
                 Pair('0', true)
             else
-                Pair(ele +1 , false)
+                Pair(ele + 1, false)
 
     fun letterPlusOne(ele: Char): Pair<Char, Boolean> =
             if (ele == 'z')
                 Pair('a', true)
             else
-                Pair(ele +1 , false)
+                Pair(ele + 1, false)
 
 }
