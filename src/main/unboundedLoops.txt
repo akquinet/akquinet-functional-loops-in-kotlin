@@ -47,6 +47,8 @@ In typical enterprisy applications you rarely have unbounded problems. Thus, my 
 
 So let us have a look at a more mathematical problem coming from a real life problem, I have actually encountered. For some reason, maybe your age, you forget an important password. You have some rules how you generate your passwords and you try out a lot of variants, but none works. So, you decide to let the computer do the work and creates passwords and tests them.
 
-To avoid publishing my rules and to simplify the code, let us say that a password is a sequence of non-capital letters (a-z) and digits (0-9).
+To avoid publishing my rules and to simplify the code, let us say that a password is a sequence of non-capital letters (a-z) and digits (0-9). This is an algorithm that may not terminate because it is possible that the actual password does not comply the the rules. In this case this algorithm will never find it and at some point of time the user is not willing to wait anymore and stops the execution of the programm with an external interrupt.
+
+
 
 
