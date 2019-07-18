@@ -25,8 +25,8 @@ internal class PasswordSearchKtTest {
         assertEquals("a", passwordList[0])
         assertEquals("b", passwordList[1])
         assertEquals("z", passwordList[25])
-        assertEquals("a0", passwordList[26])
-        assertEquals("a9", passwordList[35])
-        assertEquals("b0", passwordList[36])
+        assertEquals("0a", passwordList[26])
+        assertEquals("9a", passwordList[35])
+        assertEquals("0b", passwordList[36])
     }
 }
