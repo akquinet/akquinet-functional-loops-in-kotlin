@@ -2,7 +2,11 @@ package de.akquinet.fp.functionalloops
 
 
 fun dictionaryAttackImperative(dictionary: Iterator<String>, checkPassword: (String) -> Boolean): String {
-    return ""
+    var entry : String = ""
+    do {
+        entry = dictionary.next()
+    } while(! checkPassword(entry))
+    return entry
 }
 
 fun createLettersAndNumbersDictionary(): Iterator<String> =
