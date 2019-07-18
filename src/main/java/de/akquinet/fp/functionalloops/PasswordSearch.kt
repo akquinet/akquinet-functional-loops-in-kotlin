@@ -6,35 +6,50 @@ fun dictionaryAttackImperative(dictionary: Iterator<String>, checkPassword: (Str
 }
 
 fun createLettersAndNumbersDictionary(): Iterator<String> =
-        listOf<String>().iterator()
+        LettersAndNumbersDictionary()
 
 class LettersAndNumbersDictionary : Iterator<String> {
-    private var currentEntry: String = "a"
+    private var nextEntry: String = "a"
 
     override fun hasNext(): Boolean = true
 
     override fun next(): String {
-        val result = currentEntry
+        val result = nextEntry
 
-        var overrun = false
+        //var overrun = false
         var index = 0
+        var nextEntryArray = nextEntry.toCharArray()
         do {
-            val ele = currentEntry[index]
+            val ele = nextEntryArray[index]
             val (nextEle, overrun) = when {
-                        ele.isDigit() -> digitPlusOne(ele)
-                        ele.isLetter() -> letterPlusOne(ele)
-                        else -> throw RuntimeException("This should never happen.")
-                    }
-        } while (overrun)
+                ele.isDigit() -> digitPlusOne(ele)
+                ele.isLetter() -> letterPlusOne(ele)
+                else -> throw RuntimeException("This should never happen. Ele = $ele")
+            }
+            nextEntryArray[index] = nextEle
+            index++
+
+            if (overrun && (index == nextEntry.length)) {
+                val nextEle = if (index % 2 == 1) '0' else 'a'
+                val nextEleArray = CharArray(1, {_ -> nextEle})
+                nextEntryArray = nextEleArray + nextEntryArray
+            }
+        } while (overrun && (index < nextEntry.length))
+        nextEntry = String(nextEntryArray);
 
         return result
     }
 
-    private fun digitPlusOne(ele: Char): Pair<Char, Boolean> {
-        return Pair(ele, false)
-    }
+    fun digitPlusOne(ele: Char): Pair<Char, Boolean> =
+            if (ele == '9')
+                Pair('0', true)
+            else
+                Pair(ele +1 , false)
 
-    private fun letterPlusOne(ele: Char): Pair<Char, Boolean> {
-        return Pair(ele, false)
-    }
+    fun letterPlusOne(ele: Char): Pair<Char, Boolean> =
+            if (ele == 'z')
+                Pair('a', true)
+            else
+                Pair(ele +1 , false)
+
 }
