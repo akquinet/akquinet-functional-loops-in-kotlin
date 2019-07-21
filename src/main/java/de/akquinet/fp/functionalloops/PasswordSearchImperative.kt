@@ -9,7 +9,7 @@ fun dictionaryAttackImperative(dictionary: Iterator<String>, checkPassword: (Str
     return entry
 }
 
-fun createLettersAndNumbersDictionary(): Iterator<String> =
+fun createLettersAndNumbersDictionaryImperative(): Iterator<String> =
         LettersAndNumbersDictionaryImperative()
 
 class LettersAndNumbersDictionaryImperative : Iterator<String> {
@@ -54,5 +54,4 @@ class LettersAndNumbersDictionaryImperative : Iterator<String> {
                 Pair('a', true)
             else
                 Pair(ele + 1, false)
-
 }

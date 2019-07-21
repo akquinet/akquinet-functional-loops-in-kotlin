@@ -3,21 +3,21 @@ package de.akquinet.fp.functionalloops
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-internal class PasswordSearchKtTest {
+internal class PasswordSearchImperativeKtTest {
 
     @Test
     fun testDictionaryAttackPositiveImperative() {
         val correctPassword = "1a2b3c"
         val checkPassword =
                 { password : String -> password.equals(correctPassword) }
-        val dictionary = createLettersAndNumbersDictionary()
+        val dictionary = createLettersAndNumbersDictionaryImperative()
         val password = dictionaryAttackImperative(dictionary, checkPassword)
         assertEquals(correctPassword, password)
     }
 
     @Test
     fun testCreateLettersAndNumbersDictionary() {
-        val dictionary = createLettersAndNumbersDictionary()
+        val dictionary = createLettersAndNumbersDictionaryImperative()
                 .asSequence()
         val passwordList = dictionary
                 .take(100)
