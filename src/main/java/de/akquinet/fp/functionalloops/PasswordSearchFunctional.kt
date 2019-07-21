@@ -30,7 +30,7 @@ fun computeNextPassword(password: String): String {
             //.take(password.length)
             .first()
             .computedElements
-            .joinToString()
+            .joinToString("")
 }
 
 fun computePlusOnEachElement(state: ComputePlusOnEachElementState): ComputePlusOnEachElementState {
@@ -39,7 +39,9 @@ fun computePlusOnEachElement(state: ComputePlusOnEachElementState): ComputePlusO
             increaseCurrentElement(state)
         } else {
             // add new Element - todo
-            ComputePlusOnEachElementState(emptyList(), emptyList(), false, false)
+            ComputePlusOnEachElementState(emptyList(),
+                    listOf(if (state.isCurrentElementALetter) 'a' else '0').plus(state.computedElements),
+                    false, false)
         }
     } else {
         ComputePlusOnEachElementState(emptyList(), state.remainingElements.reversed().plus(
