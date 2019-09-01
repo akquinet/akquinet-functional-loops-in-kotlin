@@ -1,5 +1,7 @@
 package de.akquinet.fp.functionalloops
 
+fun attackFunctional(checkPassword: (String) -> Boolean) : String? =
+    dictionaryAttackFunctional(createLettersAndNumbersDictionaryFunctional(), checkPassword)
 
 fun dictionaryAttackFunctional(dictionary: Sequence<String>, checkPassword: (String) -> Boolean): String? =
         dictionary.find(checkPassword)
@@ -15,6 +17,17 @@ data class ComputePlusOnEachElementState(
         , val isOverunFromLastElement: Boolean) {
     fun isTerminated(): Boolean =
             remainingElements.isEmpty() && !isOverunFromLastElement
+}
+
+data class ComputePlusOnEachElementState2(
+        val index: Int
+        , val lengthOfPassword : Int
+        , val currentPassword : Map<Int, Char>
+        , val isCurrentElementALetter: Boolean
+        , val isOverunFromLastElement: Boolean) {
+    fun isTerminated(): Boolean =
+            index >= lengthOfPassword
+
 }
 
 fun computeNextPassword(password: String): String {
@@ -33,57 +46,44 @@ fun computeNextPassword(password: String): String {
             .joinToString("")
 }
 
-fun computePlusOnEachElement(state: ComputePlusOnEachElementState): ComputePlusOnEachElementState {
-    return if (state.isOverunFromLastElement) {
-        if (state.remainingElements.isNotEmpty()) {
-            increaseCurrentElement(state)
+fun computePlusOnEachElement(state: ComputePlusOnEachElementState): ComputePlusOnEachElementState =
+        if (state.isOverunFromLastElement) {
+            increaseElement(state)
         } else {
-            // add new Element - todo
-            ComputePlusOnEachElementState(emptyList(),
-                    listOf(if (state.isCurrentElementALetter) 'a' else '0').plus(state.computedElements),
-                    false, false)
+            finishComputation(state)
         }
+
+private fun increaseElement(state: ComputePlusOnEachElementState): ComputePlusOnEachElementState {
+    return if (state.remainingElements.isNotEmpty()) {
+        increaseCurrentElement(state)
     } else {
+        addNewElement(state)
+    }
+}
+
+private fun finishComputation(state: ComputePlusOnEachElementState) =
         ComputePlusOnEachElementState(emptyList(), state.remainingElements.reversed().plus(
                 state.computedElements), false, false)
-    }
+
+private fun addNewElement(state: ComputePlusOnEachElementState): ComputePlusOnEachElementState {
+    return ComputePlusOnEachElementState(emptyList(),
+            listOf(if (state.isCurrentElementALetter) 'a' else '0').plus(state.computedElements),
+            false, false)
 }
 
 private fun increaseCurrentElement(state: ComputePlusOnEachElementState): ComputePlusOnEachElementState {
     val element = state.remainingElements.first()
     val (nextElement, overrun) =
-            if (state.isCurrentElementALetter) letterPlusOne(element) else digitPlusOne(element)
-    // add new Element
+            if (state.isCurrentElementALetter)
+                letterPlusOne(element)
+            else
+                digitPlusOne(element)
     return ComputePlusOnEachElementState(
             state.remainingElements.drop(1),
             listOf(nextElement).plus(state.computedElements),
             !state.isCurrentElementALetter,
             overrun)
 }
-/*
-
-
-    val (nextRemainingElements, nextComputedElements) =
-            if (overrun) {
-                val isLastElement = remainingElements.size > 1
-                if (isLastElement)
-                    Pair(
-                            remainingElements.drop(1),
-                            listOf(nextElement).plus(computedElements))
-                else
-                    Pair(
-                            emptyList<Char>(),
-                            listOf(if (isLetter) '0' else 'a', nextElement).plus(computedElements))
-            } else
-                Pair(
-                        emptyList<Char>(),
-                        remainingElements.reversed().plus(
-                                computedElements)
-                )
-    return Triple(nextRemainingElements, nextComputedElements, !isLetter)
-
- */
-
 
 fun digitPlusOne(ele: Char): Pair<Char, Boolean> =
         if (ele == '9')

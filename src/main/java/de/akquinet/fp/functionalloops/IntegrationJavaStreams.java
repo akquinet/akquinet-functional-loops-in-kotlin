@@ -9,8 +9,9 @@ public class IntegrationJavaStreams {
         double step = (end - start) / (double) precision;
         return DoubleStream
                 .iterate(start,
-                        ( x -> x < end )
-                        , ( x -> x + step ))
+                        x -> x < end,
+                        x -> x + step
+                )
                 .map(x -> f.apply(x) * step)
                 .sum();
     }

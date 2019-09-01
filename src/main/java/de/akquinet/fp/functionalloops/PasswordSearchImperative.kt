@@ -1,5 +1,7 @@
 package de.akquinet.fp.functionalloops
 
+fun attackImperative(checkPassword: (String) -> Boolean) : String? =
+        dictionaryAttackImperative(createLettersAndNumbersDictionaryImperative(), checkPassword)
 
 fun dictionaryAttackImperative(dictionary: Iterator<String>, checkPassword: (String) -> Boolean): String {
     var entry : String = ""
