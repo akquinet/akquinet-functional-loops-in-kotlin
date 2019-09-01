@@ -35,6 +35,15 @@ fun integrateFunctionalCleanCode(start: Double, end: Double, precision: Int, f: 
             .sum()
 }
 
+fun integrateFunctionalCleanCodeSumBy(start: Double, end: Double, precision: Int, f: (Double) -> Double): Double {
+    val step = (end - start) / precision
+    val xCoordinates = (0 until precision)
+            .map { index -> start + index * step }
+    return xCoordinates
+            .sumByDouble { x -> f(x) * step }
+}
+
+
 fun integrateFunctionalSumBy(start: Double, end: Double, precision: Int, f: (Double) -> Double): Double {
     val step = (end - start) / precision
     return (0 until precision).sumByDouble { index ->
@@ -89,7 +98,7 @@ fun integrateFunctionalJavaStreams(start: Double, end: Double, precision: Int, f
 }
 
 fun main() {
-    println("Starting benchmark")
+    println("Starting integration benchmark")
 
     fun pow10(x: Int): Int =
             (1 until x).fold(10, { acc, _ -> acc * 10 })
@@ -119,6 +128,7 @@ fun main() {
             , ::integrateFunctionalSequence
 //            , ::integrateFunctionalSequence2
             , ::integrateFunctionalSumBy
+            , ::integrateFunctionalCleanCodeSumBy
             , ::integrateFunctionalFold
             , ::integrateFunctionalStreams
             , ::integrateFunctionalJavaStreams
