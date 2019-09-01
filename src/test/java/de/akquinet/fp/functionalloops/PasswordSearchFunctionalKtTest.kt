@@ -10,8 +10,7 @@ internal class PasswordSearchFunctionalKtTest {
         val correctPassword = "1a2b3c"
         val checkPassword =
                 { password : String -> password.equals(correctPassword) }
-        val dictionary = createLettersAndNumbersDictionaryFunctional()
-        val password = dictionaryAttackFunctional(dictionary, checkPassword)
+        val password = attackFunctional(checkPassword)
         assertEquals(correctPassword, password)
     }
 
