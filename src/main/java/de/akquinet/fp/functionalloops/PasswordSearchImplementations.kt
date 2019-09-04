@@ -51,7 +51,7 @@ class LettersAndNumbersDictionaryImperative : Iterator<String> {
 // Functional 1
 // =======================
 
-fun attackFunctional(checkPassword: (String) -> Boolean): String? =
+fun attackFunctionalSlow(checkPassword: (String) -> Boolean): String? =
     createLettersAndNumbersDictionaryFunctional().find(checkPassword)
 
 fun createLettersAndNumbersDictionaryFunctional(): Sequence<String> =
@@ -136,6 +136,11 @@ private fun increaseCurrentElement(state: ComputePlusOnEachElementState): Comput
 // Second try
 // =======================
 
+fun attackFunctional(checkPassword: (String) -> Boolean): String? =
+    generateSequence(SeedPassword, Password::plusOne)
+        .first {password -> checkPassword(password.toString()) }
+        .toString()
+
 sealed class PasswordElem(private val element: Char) {
     abstract fun plusOne(): Pair<PasswordElem, Boolean>
     override fun toString(): String {
@@ -167,21 +172,15 @@ class DigitElem(private val letter: Char) : PasswordElem(letter) {
 }
 
 class Password(val elements: List<PasswordElem>) {
-    fun plusOne(): Password {
-        return if (elements.isEmpty()) {
+    fun plusOne(): Password =
+        if (elements.isEmpty()) {
             SeedPassword
         } else {
-            val (increasedFirstElem, overflow) = elements.first().plusOne()
-            val increasedFirstElemList = listOf(increasedFirstElem)
-            return if (overflow) {
-                Password(increasedFirstElemList +
-                    Password(elements.drop(1)).plusOne().elements)
-            } else {
-                Password(increasedFirstElemList +
-                    elements.drop(1))
-            }
+            computePasswordPlusOne(elements)
         }
-    }
+
+    fun plus(n : Int) : Password =
+        (1..n).fold(this) {password:Password, _:Int -> password.plusOne() }
 
     override fun toString(): String =
         elements.asReversed().joinToString(separator = "")
@@ -191,6 +190,21 @@ class Password(val elements: List<PasswordElem>) {
             (other.elements.equals(elements))
 
     override fun hashCode(): Int = elements.hashCode()
+
+    companion object {
+        private fun computePasswordPlusOne(elements: List<PasswordElem>): Password {
+            val (increasedFirstElem, overflow) = elements.first().plusOne()
+            val increasedFirstElemList = listOf(increasedFirstElem)
+            val elementsRemainder = elements.drop(1)
+            return if (overflow) {
+                Password(increasedFirstElemList +
+                    Password(elementsRemainder).plusOne().elements)
+            } else {
+                Password(increasedFirstElemList +
+                    elementsRemainder)
+            }
+        }
+    }
 }
 
 val SeedPassword = Password(listOf(LetterElem('a')))

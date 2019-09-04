@@ -30,7 +30,7 @@ fun main() {
     )
     val attackFunctions = listOf(
         ::attackImperative
-        , ::attackFunctional
+        , ::attackFunctionalSlow
     )
 
     attackFunctions.forEach { f ->

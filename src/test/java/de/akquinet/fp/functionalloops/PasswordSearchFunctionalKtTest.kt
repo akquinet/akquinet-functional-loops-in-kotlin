@@ -7,6 +7,15 @@ import kotlin.test.assertTrue
 internal class PasswordSearchFunctionalKtTest {
 
     @Test
+    fun testDictionaryAttackFunctionalSlow() {
+        val correctPassword = "b3c"
+        val checkPassword =
+                { password : String -> password.equals(correctPassword) }
+        val password = attackFunctionalSlow(checkPassword)
+        assertEquals(correctPassword, password)
+    }
+
+    @Test
     fun testDictionaryAttackFunctional() {
         val correctPassword = "b3c"
         val checkPassword =
@@ -27,6 +36,12 @@ internal class PasswordSearchFunctionalKtTest {
     fun testPasswordPlusOne() {
         val second = SeedPassword.plusOne()
         assertEquals(Password(listOf(LetterElem('b'))), second)
+
+        val third = second.plusOne()
+        assertEquals(Password(listOf(LetterElem('c'))), third)
+
+        val `27th` = third.plus(24)
+        assertEquals(Password(listOf(LetterElem('a'), DigitElem('0'))), `27th`)
     }
 
     @Test
