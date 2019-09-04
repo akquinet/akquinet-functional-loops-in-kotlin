@@ -3,19 +3,19 @@ package de.akquinet.fp.functionalloops
 // Imperative
 // =======================
 
-fun attackImperative(checkPassword: (String) -> Boolean) : String? =
-        dictionaryAttackImperative(createLettersAndNumbersDictionaryImperative(), checkPassword)
+fun attackImperative(checkPassword: (String) -> Boolean): String? =
+    dictionaryAttackImperative(createLettersAndNumbersDictionaryImperative(), checkPassword)
 
 fun dictionaryAttackImperative(dictionary: Iterator<String>, checkPassword: (String) -> Boolean): String {
-    var entry : String = ""
+    var entry: String = ""
     do {
         entry = dictionary.next()
-    } while(! checkPassword(entry))
+    } while (!checkPassword(entry))
     return entry
 }
 
 fun createLettersAndNumbersDictionaryImperative(): Iterator<String> =
-        LettersAndNumbersDictionaryImperative()
+    LettersAndNumbersDictionaryImperative()
 
 class LettersAndNumbersDictionaryImperative : Iterator<String> {
     private var nextEntry: String = "a"
@@ -51,7 +51,7 @@ class LettersAndNumbersDictionaryImperative : Iterator<String> {
 // Functional 1
 // =======================
 
-fun attackFunctional(checkPassword: (String) -> Boolean) : String? =
+fun attackFunctional(checkPassword: (String) -> Boolean): String? =
     createLettersAndNumbersDictionaryFunctional().find(checkPassword)
 
 fun createLettersAndNumbersDictionaryFunctional(): Sequence<String> =
@@ -69,8 +69,8 @@ data class ComputePlusOnEachElementState(
 
 data class ComputePlusOnEachElementState2(
     val index: Int
-    , val lengthOfPassword : Int
-    , val currentPassword : Map<Int, Char>
+    , val lengthOfPassword: Int
+    , val currentPassword: Map<Int, Char>
     , val isCurrentElementALetter: Boolean
     , val isOverunFromLastElement: Boolean) {
     fun isTerminated(): Boolean =
@@ -132,6 +132,69 @@ private fun increaseCurrentElement(state: ComputePlusOnEachElementState): Comput
         !state.isCurrentElementALetter,
         overrun)
 }
+
+// Second try
+// =======================
+
+sealed class PasswordElem(private val element: Char) {
+    abstract fun plusOne(): Pair<PasswordElem, Boolean>
+    override fun toString(): String {
+        return element.toString()
+    }
+
+    override fun equals(other: Any?): Boolean =
+        (other is PasswordElem) &&
+            (other.element.equals(element))
+
+    override fun hashCode(): Int = element.hashCode()
+}
+
+class LetterElem(private val letter: Char) : PasswordElem(letter) {
+    override fun plusOne(): Pair<PasswordElem, Boolean> =
+        if (letter == 'z')
+            Pair(LetterElem('a'), true)
+        else
+            Pair(LetterElem(letter + 1), false)
+
+}
+
+class DigitElem(private val letter: Char) : PasswordElem(letter) {
+    override fun plusOne(): Pair<PasswordElem, Boolean> =
+        if (letter == '9')
+            Pair(DigitElem('0'), true)
+        else
+            Pair(DigitElem(letter + 1), false)
+}
+
+class Password(val elements: List<PasswordElem>) {
+    fun plusOne(): Password {
+        return if (elements.isEmpty()) {
+            SeedPassword
+        } else {
+            val (increasedFirstElem, overflow) = elements.first().plusOne()
+            val increasedFirstElemList = listOf(increasedFirstElem)
+            return if (overflow) {
+                Password(increasedFirstElemList +
+                    Password(elements.drop(1)).plusOne().elements)
+            } else {
+                Password(increasedFirstElemList +
+                    elements.drop(1))
+            }
+        }
+    }
+
+    override fun toString(): String =
+        elements.asReversed().joinToString(separator = "")
+
+    override fun equals(other: Any?): Boolean =
+        (other is Password) &&
+            (other.elements.equals(elements))
+
+    override fun hashCode(): Int = elements.hashCode()
+}
+
+val SeedPassword = Password(listOf(LetterElem('a')))
+
 
 // Utility Function
 // =======================
