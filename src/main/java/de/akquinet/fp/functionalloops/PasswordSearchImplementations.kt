@@ -152,9 +152,12 @@ sealed class PasswordElem(private val element: Char) {
             (other.element.equals(element))
 
     override fun hashCode(): Int = element.hashCode()
+    abstract fun nextLowestElem(): List<PasswordElem>
 }
 
 class LetterElem(private val letter: Char) : PasswordElem(letter) {
+    override fun nextLowestElem(): List<PasswordElem> = listOf(DigitElem('0'))
+
     override fun plusOne(): Pair<PasswordElem, Boolean> =
         if (letter == 'z')
             Pair(LetterElem('a'), true)
@@ -164,6 +167,8 @@ class LetterElem(private val letter: Char) : PasswordElem(letter) {
 }
 
 class DigitElem(private val letter: Char) : PasswordElem(letter) {
+    override fun nextLowestElem(): List<PasswordElem> = listOf(LetterElem('a'))
+
     override fun plusOne(): Pair<PasswordElem, Boolean> =
         if (letter == '9')
             Pair(DigitElem('0'), true)
@@ -197,8 +202,13 @@ class Password(val elements: List<PasswordElem>) {
             val increasedFirstElemList = listOf(increasedFirstElem)
             val elementsRemainder = elements.drop(1)
             return if (overflow) {
-                Password(increasedFirstElemList +
-                    Password(elementsRemainder).plusOne().elements)
+                val remainderPlusOne =
+                    if (elementsRemainder.isNotEmpty()) {
+                        Password(elementsRemainder).plusOne().elements
+                    } else {
+                        increasedFirstElem.nextLowestElem()
+                    }
+                Password(increasedFirstElemList + remainderPlusOne)
             } else {
                 Password(increasedFirstElemList +
                     elementsRemainder)
