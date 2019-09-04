@@ -12,10 +12,12 @@ executable deakquinetfp
     build-depends:
         base -any,
         criterion -any,
-        HUnit -any
+        HUnit -any,
+        vector == 0.12.*
     default-language: Haskell2010
     other-modules:
         SumOfOrderItems
         Integration
+        PasswordGeneration
     ghc-options: -O
 

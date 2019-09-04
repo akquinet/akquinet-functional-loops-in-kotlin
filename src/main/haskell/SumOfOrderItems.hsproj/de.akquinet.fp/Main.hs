@@ -1,5 +1,8 @@
 module Main(main) where
   
-import Integration
+-- import Integration
+-- main = doBenchmark
 
-main = doBenchmark
+import PasswordGeneration
+
+main = putStrLn test

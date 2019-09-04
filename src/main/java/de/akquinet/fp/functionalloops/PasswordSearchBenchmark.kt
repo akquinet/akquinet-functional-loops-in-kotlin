@@ -7,7 +7,7 @@ fun main() {
     println("Starting password benchmark")
 
     fun benchmark(f: ((String) -> Boolean) -> String?, checker: (String) -> Boolean) {
-        val numberOfRepetitions = 5
+        val numberOfRepetitions = 2
         System.gc()
         val averageExecutionTimeNs = (0..numberOfRepetitions)
             .map {
@@ -25,12 +25,13 @@ fun main() {
     val passwordChecks = listOf<(String) -> Boolean>(
         { password: String -> ("0a" == password) }
         , { password: String -> ("0a0a" == password) }
-        //, { password: String -> ("0a0a0a" == password) }
-        // , { password: String -> ("0a0a0a0a" == password) }
+        , { password: String -> ("0a0a0a" == password) }
+        , { password: String -> ("0a0a0a0a" == password) }
     )
     val attackFunctions = listOf(
         ::attackImperative
-        , ::attackFunctionalSlow
+        //, ::attackFunctionalSlow
+        , ::attackFunctional
     )
 
     attackFunctions.forEach { f ->
