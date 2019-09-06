@@ -179,7 +179,7 @@ class DigitElem(private val letter: Char) : PasswordElem(letter) {
 class Password(val elements: List<PasswordElem>) {
     fun plusOne(): Password =
         if (elements.isEmpty()) {
-            SeedPassword
+            SeedPassword // do I need this empty check?
         } else {
             computePasswordPlusOne(elements)
         }
