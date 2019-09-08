@@ -1,6 +1,8 @@
-module PasswordGeneration(test) where
+module PasswordGeneration where
 
 import Data.Char
+import Data.String
+import Data.List as L
 import Data.Vector as V
 
 import Criterion.Main
@@ -19,12 +21,23 @@ plusOneElem (Digit c) =
   if (c == '9') then ( lowestDigit, True) else ( Digit $plusOneChar c , False)
 
 plusOneElem (Letter c) =
-  if (c == 'z') then ( lowestLetter, True) else  ( Digit $plusOneChar c, False)
+  if (c == 'z') then ( lowestLetter, True) else  ( Letter $plusOneChar c, False)
+
+elemToChar (Digit c) = c
+elemToChar (Letter c) = c
 
 nextLowestElem (Digit _) = lowestLetter
 nextLowestElem (Letter _) = lowestDigit
 
-newtype Password = Vector Elem
+type Password = Vector Elem
+
+--instance Show Password where
+--  show password =
+
+passwordToString :: Password -> String
+passwordToString password = V.toList vectorOfChars  where
+  elemsInReadableOrder = V.reverse password
+  vectorOfChars = V.map elemToChar elemsInReadableOrder
 
 seedPassword = V.singleton $ Letter 'a'
 
@@ -44,6 +57,16 @@ plusOnePassword password
                 plusOnePassword elementsRemainder
         nonOverflowPassword = cons increasedFirstElem elementsRemainder
 
-second = plusOnePassword seedPassword
+passwords :: [String]
+passwords = Prelude.map passwordToString passwordsAsVectors where
+  passwordsAsVectors = iterate plusOnePassword seedPassword
 
-test = (show second)
+attackFunctional :: (String -> Bool) -> Maybe String
+attackFunctional checkPassword =
+  L.find checkPassword passwords
+
+check1 string = "0a0a" == string
+test1 = attackFunctional check1
+
+passwd = passwords !! 27
+test = (show passwd)

@@ -3,6 +3,8 @@ module Main(main) where
 -- import Integration
 -- main = doBenchmark
 
-import PasswordGeneration
+-- import SumOfOrderItems
+-- main = runTestSuite
 
+import PasswordGeneration
 main = putStrLn test

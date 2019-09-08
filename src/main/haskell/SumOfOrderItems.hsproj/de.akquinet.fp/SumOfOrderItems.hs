@@ -1,4 +1,4 @@
-module SumOforderItems where
+module SumOfOrderItems(runTestSuite) where
 
 import Test.HUnit
 
@@ -29,4 +29,4 @@ allTests = TestList
   , wrongResultTest
   ]
 
-main  = runTestTT allTests
+runTestSuite  = runTestTT allTests
