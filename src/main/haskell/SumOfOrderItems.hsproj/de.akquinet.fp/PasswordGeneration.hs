@@ -41,9 +41,7 @@ passwordToString password = V.toList vectorOfChars  where
 
 seedPassword = V.singleton $ Letter 'a'
 
-plusOnePassword password
-  | V.null password = seedPassword -- Check, if I need this, also in Kotlin
-  | otherwise  =
+plusOnePassword password =
       if (overflow) then  overflowPassword else nonOverflowPassword
       where
         (increasedFirstElem, overflow) = plusOneElem $ V.head password
@@ -84,6 +82,6 @@ doBenchmark = defaultMain [
             [ bench "0a"  $ whnf benchAttackFunctional2 "0a"
             , bench "0a0a"  $ whnf benchAttackFunctional2 "0a0a"
             , bench "0a0a0a"  $ whnf benchAttackFunctional2 "0a0a0a"
-            , bench "0a0a0a0a"  $ whnf benchAttackFunctional2 "0a0a0a0a"
+           -- , bench "0a0a0a0a"  $ whnf benchAttackFunctional2 "0a0a0a0a"
             ]
   ]
