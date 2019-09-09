@@ -7,4 +7,4 @@ module Main(main) where
 -- main = runTestSuite
 
 import PasswordGeneration
-main = putStrLn test
+main = doBenchmark

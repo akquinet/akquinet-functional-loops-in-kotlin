@@ -25,13 +25,13 @@ fun main() {
     val passwordChecks = listOf<(String) -> Boolean>(
         { password: String -> ("0a" == password) }
         , { password: String -> ("0a0a" == password) }
-        , { password: String -> ("0a0a0a" == password) }
+      //  , { password: String -> ("0a0a0a" == password) }
         , { password: String -> ("0a0a0a0a" == password) }
     )
     val attackFunctions = listOf(
         ::attackImperative
         //, ::attackFunctionalSlow
-        , ::attackFunctional
+        //, ::attackFunctional
     )
 
     attackFunctions.forEach { f ->

@@ -57,16 +57,33 @@ plusOnePassword password
                 plusOnePassword elementsRemainder
         nonOverflowPassword = cons increasedFirstElem elementsRemainder
 
-passwords :: [String]
-passwords = Prelude.map passwordToString passwordsAsVectors where
+
+attackFunctional1 checkPassword = L.find checkPassword passwords where
   passwordsAsVectors = iterate plusOnePassword seedPassword
+  passwords = Prelude.map passwordToString passwordsAsVectors
 
-attackFunctional :: (String -> Bool) -> Maybe String
-attackFunctional checkPassword =
-  L.find checkPassword passwords
+attackFunctional2 checkPassword = attackFunctionalIteration seedPassword where
+  attackFunctionalIteration password =
+    if (checkPassword passwordAsString)
+      then passwordAsString
+      else attackFunctionalIteration $ plusOnePassword password
+    where
+      passwordAsString = passwordToString password
 
-check1 string = "0a0a" == string
-test1 = attackFunctional check1
+benchAttackFunctional1 password = attackFunctional1 (\p -> p == password )
+benchAttackFunctional2 password = attackFunctional2 (\p -> p == password )
 
-passwd = passwords !! 27
-test = (show passwd)
+doBenchmark = defaultMain [
+  bgroup "Benchmarking the functional password attack with a list"
+          [ bench "0a"  $ whnf benchAttackFunctional1 "0a"
+          , bench "0a0a"  $ whnf benchAttackFunctional1 "0a0a"
+          , bench "0a0a0a"  $ whnf benchAttackFunctional1 "0a0a0a"
+          --, bench "0a0a0a0a"  $ whnf benchAttackFunctional1 "0a0a0a0a"
+          ] ,
+  bgroup "Benchmarking the functional password attack with a recursion"
+            [ bench "0a"  $ whnf benchAttackFunctional2 "0a"
+            , bench "0a0a"  $ whnf benchAttackFunctional2 "0a0a"
+            , bench "0a0a0a"  $ whnf benchAttackFunctional2 "0a0a0a"
+            , bench "0a0a0a0a"  $ whnf benchAttackFunctional2 "0a0a0a0a"
+            ]
+  ]
