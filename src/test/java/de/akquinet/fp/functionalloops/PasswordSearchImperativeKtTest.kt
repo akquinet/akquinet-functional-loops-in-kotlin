@@ -9,7 +9,7 @@ internal class PasswordSearchImperativeKtTest {
     fun testDictionaryAttackPositiveImperative() {
         val correctPassword = "1a2b3c"
         val checkPassword =
-                { password : String -> password.equals(correctPassword) }
+                { password : String -> password == correctPassword }
         val dictionary = createLettersAndNumbersDictionaryImperative()
         val password = dictionaryAttackImperative(dictionary, checkPassword)
         assertEquals(correctPassword, password)

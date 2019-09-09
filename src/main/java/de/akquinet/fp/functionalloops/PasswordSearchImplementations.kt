@@ -7,7 +7,7 @@ fun attackImperative(checkPassword: (String) -> Boolean): String? =
     dictionaryAttackImperative(createLettersAndNumbersDictionaryImperative(), checkPassword)
 
 fun dictionaryAttackImperative(dictionary: Iterator<String>, checkPassword: (String) -> Boolean): String {
-    var entry: String = ""
+    var entry: String
     do {
         entry = dictionary.next()
     } while (!checkPassword(entry))
@@ -38,102 +38,18 @@ class LettersAndNumbersDictionaryImperative : Iterator<String> {
             index++
 
             if (overrun && (index == nextEntry.length)) {
-                val nextEle = if (index % 2 == 1) '0' else 'a'
-                val nextEleArray = CharArray(1, { _ -> nextEle })
-                nextEntryArray = nextEleArray + nextEntryArray
+                val nextNextEle = if (index % 2 == 1) '0' else 'a'
+                val nextNextEleArray = CharArray(1) { nextNextEle }
+                nextEntryArray = nextNextEleArray + nextEntryArray
             }
         } while (overrun && (index < nextEntry.length))
-        nextEntry = String(nextEntryArray);
+        nextEntry = String(nextEntryArray)
 
         return result
     }
 }
-// Functional 1
-// =======================
 
-fun attackFunctionalSlow(checkPassword: (String) -> Boolean): String? =
-    createLettersAndNumbersDictionaryFunctional().find(checkPassword)
-
-fun createLettersAndNumbersDictionaryFunctional(): Sequence<String> =
-    generateSequence("a", ::computeNextPassword)
-
-
-data class ComputePlusOnEachElementState(
-    val remainingElements: List<Char>
-    , val computedElements: List<Char>
-    , val isCurrentElementALetter: Boolean
-    , val isOverunFromLastElement: Boolean) {
-    fun isTerminated(): Boolean =
-        remainingElements.isEmpty() && !isOverunFromLastElement
-}
-
-data class ComputePlusOnEachElementState2(
-    val index: Int
-    , val lengthOfPassword: Int
-    , val currentPassword: Map<Int, Char>
-    , val isCurrentElementALetter: Boolean
-    , val isOverunFromLastElement: Boolean) {
-    fun isTerminated(): Boolean =
-        index >= lengthOfPassword
-
-}
-
-fun computeNextPassword(password: String): String {
-    val elementsFromRightToLeft = password.toList().reversed()
-    val seed = ComputePlusOnEachElementState(
-        elementsFromRightToLeft,
-        emptyList<Char>(),
-        true,
-        true
-    )
-    return generateSequence(seed, ::computePlusOnEachElement)
-        .filter(ComputePlusOnEachElementState::isTerminated)
-        //.take(password.length)
-        .first()
-        .computedElements
-        .joinToString("")
-}
-
-fun computePlusOnEachElement(state: ComputePlusOnEachElementState): ComputePlusOnEachElementState =
-    if (state.isOverunFromLastElement) {
-        increaseElement(state)
-    } else {
-        finishComputation(state)
-    }
-
-private fun increaseElement(state: ComputePlusOnEachElementState): ComputePlusOnEachElementState {
-    return if (state.remainingElements.isNotEmpty()) {
-        increaseCurrentElement(state)
-    } else {
-        addNewElement(state)
-    }
-}
-
-private fun finishComputation(state: ComputePlusOnEachElementState) =
-    ComputePlusOnEachElementState(emptyList(), state.remainingElements.reversed().plus(
-        state.computedElements), false, false)
-
-private fun addNewElement(state: ComputePlusOnEachElementState): ComputePlusOnEachElementState {
-    return ComputePlusOnEachElementState(emptyList(),
-        listOf(if (state.isCurrentElementALetter) 'a' else '0').plus(state.computedElements),
-        false, false)
-}
-
-private fun increaseCurrentElement(state: ComputePlusOnEachElementState): ComputePlusOnEachElementState {
-    val element = state.remainingElements.first()
-    val (nextElement, overrun) =
-        if (state.isCurrentElementALetter)
-            letterPlusOne(element)
-        else
-            digitPlusOne(element)
-    return ComputePlusOnEachElementState(
-        state.remainingElements.drop(1),
-        listOf(nextElement).plus(state.computedElements),
-        !state.isCurrentElementALetter,
-        overrun)
-}
-
-// Second try
+// Functional
 // =======================
 
 fun attackFunctional(checkPassword: (String) -> Boolean): String? =
@@ -148,8 +64,7 @@ sealed class PasswordElem(private val element: Char) {
     }
 
     override fun equals(other: Any?): Boolean =
-        (other is PasswordElem) &&
-            (other.element.equals(element))
+        (other is PasswordElem) && (other.element == element)
 
     override fun hashCode(): Int = element.hashCode()
     abstract fun nextLowestElem(): List<PasswordElem>
@@ -191,8 +106,7 @@ class Password(val elements: List<PasswordElem>) {
         elements.asReversed().joinToString(separator = "")
 
     override fun equals(other: Any?): Boolean =
-        (other is Password) &&
-            (other.elements.equals(elements))
+        (other is Password) && (other.elements == elements)
 
     override fun hashCode(): Int = elements.hashCode()
 

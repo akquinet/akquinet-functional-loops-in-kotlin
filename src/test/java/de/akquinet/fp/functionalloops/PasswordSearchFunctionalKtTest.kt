@@ -2,34 +2,16 @@ package de.akquinet.fp.functionalloops
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import kotlin.test.assertTrue
 
 internal class PasswordSearchFunctionalKtTest {
-
-    @Test
-    fun testDictionaryAttackFunctionalSlow() {
-        val correctPassword = "b3c"
-        val checkPassword =
-                { password : String -> password.equals(correctPassword) }
-        val password = attackFunctionalSlow(checkPassword)
-        assertEquals(correctPassword, password)
-    }
 
     @Test
     fun testDictionaryAttackFunctional() {
         val correctPassword = "b3c"
         val checkPassword =
-                { password : String -> password.equals(correctPassword) }
+                { password : String -> password == correctPassword }
         val password = attackFunctional(checkPassword)
         assertEquals(correctPassword, password)
-    }
-
-    @Test
-    fun testComputeNextPassword() {
-        assertEquals("b", computeNextPassword("a"))
-        assertEquals("0a", computeNextPassword("z"))
-        assertEquals("0b", computeNextPassword("0a"))
-        assertEquals("1a", computeNextPassword("0z"))
     }
 
     @Test
@@ -40,8 +22,8 @@ internal class PasswordSearchFunctionalKtTest {
         val third = second.plusOne()
         assertEquals(Password(listOf(LetterElem('c'))), third)
 
-        val `27th` = third.plus(24)
-        assertEquals(Password(listOf(LetterElem('a'), DigitElem('0'))), `27th`)
+        val twentySeventh = third.plus(24)
+        assertEquals(Password(listOf(LetterElem('a'), DigitElem('0'))), twentySeventh)
     }
 
     @Test
@@ -54,8 +36,8 @@ internal class PasswordSearchFunctionalKtTest {
     fun testPasswordEquals() {
         val password1 = Password(listOf(LetterElem('b')))
         val password2 = Password(listOf(LetterElem('b')))
-        assertTrue(password1.equals(password1))
-        assertTrue(password1.equals(password2))
+        assertEquals(password1, password1)
+        assertEquals(password1, password2)
 
     }
 }
