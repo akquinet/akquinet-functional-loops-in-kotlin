@@ -11,15 +11,15 @@ fun sumImperativ(items: List<OrderItem>): Int {
 }
 
 fun sumFunctional(items: List<OrderItem>): Int =
-        items
-                .map(OrderItem::amount)
-                .sum()
+    items
+        .map(OrderItem::amount)
+        .sum()
 
-fun filterOrderItemsWithMinimumAmountImperativ(items: List<OrderItem>, amount:Int)
-        :List<OrderItem> {
+fun filterOrderItemsWithMinimumAmountImperativ(items: List<OrderItem>, amount: Int)
+    : List<OrderItem> {
     val result = mutableListOf<OrderItem>()
     val iterator = items.listIterator()
-    while(iterator.hasNext()) {
+    while (iterator.hasNext()) {
         val orderItem = iterator.next()
         if (orderItem.amount >= amount) {
             result.add(orderItem)
@@ -28,9 +28,18 @@ fun filterOrderItemsWithMinimumAmountImperativ(items: List<OrderItem>, amount:In
     return result
 }
 
-fun filterOrderItemsWithMinimumAmountFunctional(items: List<OrderItem>, amount:Int)
-        :List<OrderItem> =
-        items.filter {item -> item.amount >= amount}
+fun filterOrderItemsWithMinimumAmountFunctional(items: List<OrderItem>, amount: Int)
+    : List<OrderItem> =
+    items.fold(emptyList())
+    { list, orderItem ->
+        if (orderItem.amount >= amount)
+            list.plus(orderItem)
+        else list
+    }
+
+fun filterOrderItemsWithMinimumAmountFunctional2(items: List<OrderItem>, amount: Int)
+    : List<OrderItem> =
+    items.filter { item -> item.amount >= amount }
 
 
 fun sumByFunctional(items: List<OrderItem>): Int = items.sumBy(OrderItem::amount)
