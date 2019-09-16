@@ -99,12 +99,7 @@ class DigitElem(private val letter: Char) : PasswordElem(letter) {
 }
 
 class Password(val elements: List<PasswordElem>) {
-    fun plusOne(): Password =
-        if (elements.isEmpty()) {
-            SeedPassword // do I need this empty check?
-        } else {
-            computePasswordPlusOne(elements)
-        }
+    fun plusOne(): Password = computePasswordPlusOne(elements)
 
     fun plus(n: Int): Password =
         (1..n).fold(this) { password: Password, _: Int -> password.plusOne() }
