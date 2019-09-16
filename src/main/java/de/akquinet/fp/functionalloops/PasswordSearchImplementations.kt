@@ -29,23 +29,30 @@ class LettersAndNumbersDictionaryImperative : Iterator<String> {
         var index = 0
         do {
             val ele = nextEntryArray[index]
-            val (nextEle, overrun) = when {
-                ele.isDigit() -> digitPlusOne(ele)
-                ele.isLetter() -> letterPlusOne(ele)
-                else -> throw RuntimeException("This should never happen. Ele = $ele")
-            }
-            nextEntryArray[index] = nextEle
+            val (elePlusOne, overrun) = plusOne(ele)
+            nextEntryArray[index] = elePlusOne
             index++
-
             if (overrun && (index == nextEntry.length)) {
-                val nextNextEle = if (index % 2 == 1) '0' else 'a'
-                val nextNextEleArray = CharArray(1) { nextNextEle }
-                nextEntryArray = nextNextEleArray + nextEntryArray
+                val nextEle = lowestElemOnIdex(index)
+                val nextEleArray = CharArray(1) { nextEle }
+                nextEntryArray = nextEleArray + nextEntryArray
             }
         } while (overrun && (index < nextEntry.length))
         nextEntry = String(nextEntryArray)
 
         return result
+    }
+
+
+    companion object {
+        private fun plusOne(ele: Char): Pair<Char, Boolean> =
+            when {
+                ele.isDigit() -> digitPlusOne(ele)
+                ele.isLetter() -> letterPlusOne(ele)
+                else -> throw RuntimeException("This should never happen. Ele = $ele")
+            }
+
+        private fun lowestElemOnIdex(index: Int) = if (index % 2 == 1) '0' else 'a'
     }
 }
 
@@ -54,7 +61,7 @@ class LettersAndNumbersDictionaryImperative : Iterator<String> {
 
 fun attackFunctional(checkPassword: (String) -> Boolean): String? =
     generateSequence(SeedPassword, Password::plusOne)
-        .first {password -> checkPassword(password.toString()) }
+        .first { password -> checkPassword(password.toString()) }
         .toString()
 
 sealed class PasswordElem(private val element: Char) {
@@ -99,8 +106,8 @@ class Password(val elements: List<PasswordElem>) {
             computePasswordPlusOne(elements)
         }
 
-    fun plus(n : Int) : Password =
-        (1..n).fold(this) {password:Password, _:Int -> password.plusOne() }
+    fun plus(n: Int): Password =
+        (1..n).fold(this) { password: Password, _: Int -> password.plusOne() }
 
     override fun toString(): String =
         elements.asReversed().joinToString(separator = "")
