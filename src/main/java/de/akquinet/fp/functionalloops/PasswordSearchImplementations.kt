@@ -135,6 +135,18 @@ class Password(val elements: List<PasswordElem>) {
 
 val SeedPassword = Password(listOf(LetterElem('a')))
 
+// Functional with tail recursion
+// ==============================
+
+fun attackFunctionalTR(checkPassword: (String) -> Boolean): String? {
+    tailrec fun attackFunctionalIteration(password: Password): String {
+        val passwordAsString = password.toString()
+        return if (checkPassword(passwordAsString))
+            passwordAsString
+        else attackFunctionalIteration(password.plusOne())
+    }
+    return attackFunctionalIteration(SeedPassword)
+}
 
 // Utility Function
 // =======================
