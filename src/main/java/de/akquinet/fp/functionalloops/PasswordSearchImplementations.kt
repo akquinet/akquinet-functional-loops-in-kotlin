@@ -33,7 +33,7 @@ class LettersAndNumbersDictionaryImperative : Iterator<String> {
             nextEntryArray[index] = elePlusOne
             index++
             if (overrun && (index == nextEntry.length)) {
-                val nextEle = lowestElemOnIdex(index)
+                val nextEle = lowestElemOnIndex(index)
                 val nextEleArray = CharArray(1) { nextEle }
                 nextEntryArray = nextEleArray + nextEntryArray
             }
@@ -52,7 +52,7 @@ class LettersAndNumbersDictionaryImperative : Iterator<String> {
                 else -> throw RuntimeException("This should never happen. Ele = $ele")
             }
 
-        private fun lowestElemOnIdex(index: Int) = if (index % 2 == 1) '0' else 'a'
+        private fun lowestElemOnIndex(index: Int) = if (index % 2 == 1) '0' else 'a'
     }
 }
 
